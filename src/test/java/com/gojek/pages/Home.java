@@ -60,6 +60,7 @@ public class Home {
 	
 	public void logoutAmazon(WebDriver driver) {
 		Browser.waitMoveToElement(driver, getHelloMenu());
+		Browser.waitForElementToBeVisible(driver, getHelloMenu());
 		Browser.waitClick(driver, getSignOutButton());
 	}
 	
