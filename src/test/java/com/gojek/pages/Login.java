@@ -6,20 +6,18 @@ import com.gojek.resources.*;
 import com.gojek.utilities.*;
 
 public class Login {
-	WebDriver driver;
+	
 	User user;
-
-	private final String amazonLogo = "//a[@aria-label='Amazon']";
-	private final String signIn = "//a[@id='nav-link-accountList']";
-	private final String email = "//input[@type='email']";
-	private final String nextButton = "//input[@id='continue']";
-	private final String password = "//input[@type='password']";
-	private final String loginButton = "//input[@id='signInSubmit']";
+	private String amazonLogo = "//a[@aria-label='Amazon']";
+	private String signIn = "//a[@id='nav-link-accountList']";
+	private String email = "//input[@type='email']";
+	private String nextButton = "//input[@id='continue']";
+	private String password = "//input[@type='password']";
+	private String loginButton = "//input[@id='signInSubmit']";
 
 	public Login(WebDriver driver, String url) {
 		user = new User();
-		this.driver = driver;
-		waitForPageLoad(url);
+		waitForPageLoad(driver,url);
 	}
 
 	public By getAmazonLogo() {
@@ -46,17 +44,16 @@ public class Login {
 		return By.xpath(loginButton);
 	}
 
-	public void loginIntoAmazon() {
+	public void loginIntoAmazon(WebDriver driver) {
 		Browser.waitForElementToBeVisible(driver, getAmazonLogo());
 		Browser.waitClick(driver, getSignIn());
-		driver.findElement(getEmail()).sendKeys(user.getUserName());
+		Browser.waitAndFillTextField(driver, getEmail(), user.getUserName());
 		Browser.waitClick(driver, getNextButton());
-		driver.findElement(getPassword()).sendKeys(user.getPassword());
+		Browser.waitAndFillTextField(driver, getPassword(), user.getPassword());
 		Browser.waitClick(driver, getLoginButton());
-
 	}
 
-	public void waitForPageLoad(String url) {
+	public void waitForPageLoad(WebDriver driver, String url) {
 		driver.get(url);
 		Browser.waitForPageLoadToComplete(driver);
 	}
