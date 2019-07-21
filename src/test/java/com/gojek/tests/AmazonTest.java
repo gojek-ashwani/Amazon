@@ -19,7 +19,7 @@ public class AmazonTest {
 	String amazonURL = "https://www.amazon.in/";
 	String hiMessage = "Hi, Ashwani";
 	private static String pathOfChromeDriver = "C:\\Users\\ashwani.raj\\Documents\\gojek\\assignment\\amazon\\driver\\chromedriver.exe";
-	private String[] products = { "Macbook Pro", "Wrist Watches", "Mobile Phones" };
+	private String[] products = { "Wrist Watches", "Macbook Pro", "Mobile Phones" };
 
 	Home homePage = new Home();
 	Cart shoppingCartPage = new Cart();
@@ -50,7 +50,20 @@ public class AmazonTest {
 
 	@Test(description = "Test to select macbook quantity 2", priority = 2, enabled = true)
 	public void selectMacbook() {
-		homePage.selectAfterSearch(driver, products[0]);
+		driver.navigate().refresh();
+		homePage.selectAfterSearch(driver, products[1]);
+		String parentWinHandle = driver.getWindowHandle();
+		Browser.selectItemNumber(driver, homePage.getSearchResults(), 2);
+		Browser.waitForPageLoadToComplete(driver);
+		for(String newWindowHandle : driver.getWindowHandles()){
+			if(!newWindowHandle.equals(parentWinHandle)) {
+				driver.switchTo().window(newWindowHandle);
+			}
+		}
+		Browser.waitAndSelectFromDropdown(driver, homePage.getQuantity(), "2");
+		Browser.waitClick(driver, homePage.getAddToCartButton());
+		Browser.waitForPageLoadToComplete(driver);
+		driver.switchTo().window(parentWinHandle);
 	}
 
 	@Test(description = "Test to search multiple products", priority = 3, enabled = true)

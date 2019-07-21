@@ -17,8 +17,11 @@ public class Home {
 	private String tvAppliancesElectronics = "//span[text()='TV, Appliances, Electronics']";
 	private String headphones = "//span[text()='Headphones']";
 	private String firstItem = "//div[@id='100_dealView_0']//a[@id='dealImage']";
+	private String items = "//div[@id='100_dealView_%d']//a[@id='dealImage']";
 	private String cartCount = "//span[@id='nav-cart-count']";
 	private String addToCart = "//button[@title='Add to Shopping Cart']";
+	private String quantity = "//select[@id='quantity']";
+	private String searchResults = "//div[@class='a-section aok-relative s-image-fixed-height']";
 	
 	public By getSignOutButton() {
 		return By.xpath(signOut);
@@ -71,6 +74,24 @@ public class Home {
 		return By.xpath(addToCart);
 	}
 	
+	public By getItemNumber(int count) {
+		return By.xpath(item(count));
+	}
+	
+	public By getQuantity() {
+		return By.xpath(quantity);
+	}
+	
+	public By getSearchResults() {
+		return By.xpath(searchResults);
+	}
+	
+	public String item(int count) {
+		String itemLocator = items;
+		String xpathItemLocator = String.format(itemLocator, count);
+		return xpathItemLocator;
+		
+	}
 	public Boolean verifyLoggedInUser(WebDriver driver, By obj, String textToVerify) {
 		Browser.waitForPageLoadToComplete(driver);
 		Browser.waitForElementToBeVisible(driver, obj);

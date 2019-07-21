@@ -1,5 +1,8 @@
 package com.gojek.utilities;
 
+import java.lang.reflect.Array;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -53,5 +56,17 @@ public class Browser {
 			flag = true;
 		}
 		return flag;
+	}
+	
+	public static void selectItemNumber(WebDriver driver, By obj, int number) {
+		List<WebElement> result = driver.findElements(obj);
+		for (int i = 0; i < result.size(); i++) {
+			if(i == number) {
+				Actions actions = new Actions(driver);  
+			    actions.click(result.get(i)).perform();
+			    break;
+			}
+		}
+		
 	}
 }

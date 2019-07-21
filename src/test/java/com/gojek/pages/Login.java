@@ -2,8 +2,9 @@ package com.gojek.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import com.gojek.resources.*;
-import com.gojek.utilities.*;
+
+import com.gojek.resources.User;
+import com.gojek.utilities.Browser;
 
 public class Login {
 	
