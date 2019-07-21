@@ -6,20 +6,26 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.gojek.pages.Cart;
 import com.gojek.pages.Home;
 import com.gojek.pages.Login;
 import com.gojek.utilities.Browser;
 
+import junit.framework.Assert;
+
 public class AmazonTest {
+	
 	public static WebDriver driver;
 	String amazonURL = "https://www.amazon.in/";
+	String hiMessage = "Hi, Ashwani";
 	private static String pathOfChromeDriver = "C:\\Users\\ashwani.raj\\Documents\\gojek\\assignment\\amazon\\driver\\chromedriver.exe";
 	private String[] products = { "Macbook Pro", "Wrist Watches", "Mobile Phones" };
 
 	Home homePage = new Home();
+	Cart shoppingCartPage = new Cart();
 
 	@BeforeClass
-	public void preCondition() {
+	public void setup() {
 		System.setProperty("webdriver.chrome.driver", pathOfChromeDriver);
 		driver = new ChromeDriver();
 		driver.manage().window().maximize();
@@ -29,11 +35,17 @@ public class AmazonTest {
 	public void loginAmazonAccount() {
 		Login loginPage = new Login(driver, amazonURL);
 		loginPage.loginIntoAmazon(driver);
+		Boolean result = homePage.verifyLoggedInUser(driver, homePage.getHiMessage(), hiMessage);
+		Assert.assertTrue(result);
 	}
 
 	@Test(description = "Test to select headphone and add to cart", priority = 1, enabled = true)
 	public void selectHeadphoneAndAddToCart() {
 		homePage.selectHeadphoneAfterSearch(driver);
+		driver.navigate().refresh();
+		Browser.waitForElementToBeVisible(driver, homePage.getCartCount());
+		int cartCount = Integer.parseInt(driver.findElement(homePage.getCartCount()).getText());
+		Assert.assertEquals(1, cartCount);
 	}
 
 	@Test(description = "Test to select macbook quantity 2", priority = 2, enabled = true)
@@ -48,8 +60,14 @@ public class AmazonTest {
 			homePage.selectAfterSearch(driver, searchValue);
 		}
 	}
+	
+	@Test(description = "Test to delete items in cart", priority = 4, enabled = true)
+	public void deleteItemsInCart() {
+		Browser.waitClick(driver, homePage.getCartCount());
+		shoppingCartPage.deleteItems(driver);
+	}
 
-	@Test(description = "Test to logout from amazon application", priority = 4, enabled = true)
+	@Test(description = "Test to logout from amazon application", priority = 5, enabled = true)
 	public void logoutAmazonAccount() {
 		Browser.waitForPageLoadToComplete(driver);
 		homePage.logoutAmazon(driver);

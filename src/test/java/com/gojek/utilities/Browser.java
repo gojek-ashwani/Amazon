@@ -43,4 +43,15 @@ public class Browser {
 		Select all = new Select(driver.findElement(obj));
 		all.selectByVisibleText(textToSelect);
 	}
+	
+	public static Boolean waitVerifyText(WebDriver driver, By obj, String textToMatch) {
+		Boolean flag = false;
+		waitForPageLoadToComplete(driver);
+		waitForElementToBeVisible(driver, obj);
+		String fetchedText = driver.findElement(obj).getText();
+		if(fetchedText.contains(textToMatch)) {
+			flag = true;
+		}
+		return flag;
+	}
 }
