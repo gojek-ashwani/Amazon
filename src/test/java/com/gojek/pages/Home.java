@@ -19,8 +19,8 @@ public class Home {
 	private String firstItem = "//div[@id='100_dealView_0']//a[@id='dealImage']";
 	private String items = "//div[@id='100_dealView_%d']//a[@id='dealImage']";
 	private String cartCount = "//span[@id='nav-cart-count']";
-	private String addToCart = "//button[@title='Add to Shopping Cart']";
-	private String quantity = "//select[@id='quantity']";
+	private String addToCart = "//*[@title='Add to Shopping Cart']";
+	private String quantity = "//select[@name='quantity']";
 	private String searchResults = "//div[@class='a-section aok-relative s-image-fixed-height']";
 	
 	public By getSignOutButton() {
@@ -62,7 +62,7 @@ public class Home {
 		return By.xpath(firstItem);
 	}
 	
-	public By getCartCount() {
+	public By getCart() {
 		return By.xpath(cartCount);
 	}
 	
@@ -123,10 +123,12 @@ public class Home {
 		for(String newWindowHandle : driver.getWindowHandles()){
 			if(!newWindowHandle.equals(parentWinHandle)) {
 				driver.switchTo().window(newWindowHandle);
+				Browser.waitClick(driver, getAddToCartButton());
+				Browser.waitForPageLoadToComplete(driver);
+				driver.close();
+				break;
 			}
 		}
-		Browser.waitClick(driver, getAddToCartButton());
-		Browser.waitForPageLoadToComplete(driver);
 		driver.switchTo().window(parentWinHandle);
 	}
 }

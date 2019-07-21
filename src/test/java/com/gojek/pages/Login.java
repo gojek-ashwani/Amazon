@@ -47,6 +47,7 @@ public class Login {
 
 	public void loginIntoAmazon(WebDriver driver) {
 		Browser.waitForElementToBeVisible(driver, getAmazonLogo());
+		Browser.waitForElementToBeVisible(driver, getSignIn());
 		Browser.waitClick(driver, getSignIn());
 		Browser.waitAndFillTextField(driver, getEmail(), user.getUserName());
 		Browser.waitClick(driver, getNextButton());

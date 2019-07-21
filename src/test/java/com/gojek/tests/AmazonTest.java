@@ -43,26 +43,28 @@ public class AmazonTest {
 	public void selectHeadphoneAndAddToCart() {
 		homePage.selectHeadphoneAfterSearch(driver);
 		driver.navigate().refresh();
-		Browser.waitForElementToBeVisible(driver, homePage.getCartCount());
-		int cartCount = Integer.parseInt(driver.findElement(homePage.getCartCount()).getText());
+		Browser.waitForElementToBeVisible(driver, homePage.getCart());
+		int cartCount = Integer.parseInt(driver.findElement(homePage.getCart()).getText());
 		Assert.assertEquals(1, cartCount);
 	}
 
 	@Test(description = "Test to select macbook quantity 2", priority = 2, enabled = true)
 	public void selectMacbook() {
-		driver.navigate().refresh();
+		driver.get(amazonURL);
 		homePage.selectAfterSearch(driver, products[1]);
 		String parentWinHandle = driver.getWindowHandle();
-		Browser.selectItemNumber(driver, homePage.getSearchResults(), 2);
+		Browser.performClickOnItemAtPosition(driver, homePage.getSearchResults(), 2);
 		Browser.waitForPageLoadToComplete(driver);
 		for(String newWindowHandle : driver.getWindowHandles()){
 			if(!newWindowHandle.equals(parentWinHandle)) {
 				driver.switchTo().window(newWindowHandle);
+				Browser.waitAndSelectFromDropdown(driver, homePage.getQuantity(), "2");
+				Browser.waitClick(driver, homePage.getAddToCartButton());
+				Browser.waitForPageLoadToComplete(driver);
+				driver.close();
+				break;
 			}
 		}
-		Browser.waitAndSelectFromDropdown(driver, homePage.getQuantity(), "2");
-		Browser.waitClick(driver, homePage.getAddToCartButton());
-		Browser.waitForPageLoadToComplete(driver);
 		driver.switchTo().window(parentWinHandle);
 	}
 
@@ -75,9 +77,18 @@ public class AmazonTest {
 	}
 	
 	@Test(description = "Test to delete items in cart", priority = 4, enabled = true)
-	public void deleteItemsInCart() {
-		Browser.waitClick(driver, homePage.getCartCount());
-		shoppingCartPage.deleteItems(driver);
+	public void reviewItemsInCartAndProceedToCheckout() {
+		Browser.waitClick(driver, homePage.getCart());
+		shoppingCartPage.deleteItems(driver, 1);
+		driver.navigate().refresh();
+		Browser.waitForPageLoadToComplete(driver);
+		Browser.waitForElementToBeVisible(driver, homePage.getCart());
+		int cartCount = Integer.parseInt(driver.findElement(homePage.getCart()).getText());
+		Assert.assertEquals(2, cartCount);
+		Browser.waitAndSelectFromDropdown(driver, homePage.getQuantity(), "1");
+		shoppingCartPage.proceedToCheckout(driver);
+		driver.navigate().back();
+		Browser.waitForPageLoadToComplete(driver);
 	}
 
 	@Test(description = "Test to logout from amazon application", priority = 5, enabled = true)
